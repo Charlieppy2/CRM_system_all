@@ -1,2 +1,2 @@
-# CRM_system_all
-CRM_system_all
+# CRM_system
+CRM_system for training activity
