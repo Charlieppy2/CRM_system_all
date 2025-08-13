@@ -41,6 +41,49 @@ export default function FinancialReport() {
   const [popularItems, setPopularItems] = useState<PopularItem[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState('本月');
   const [isLoading, setIsLoading] = useState(true);
+  const [filteredRecords, setFilteredRecords] = useState<FinancialRecord[]>([]);
+
+  // 根據時間週期篩選記錄
+  const filterRecordsByPeriod = (records: FinancialRecord[], period: string) => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    
+    let startDate: Date;
+    let endDate: Date;
+    
+    switch (period) {
+      case '本月':
+        startDate = new Date(currentYear, currentMonth, 1);
+        endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
+        break;
+      case '上月':
+        startDate = new Date(currentYear, currentMonth - 1, 1);
+        endDate = new Date(currentYear, currentMonth, 0, 23, 59, 59, 999);
+        break;
+      case '本季度':
+        const quarter = Math.floor(currentMonth / 3);
+        startDate = new Date(currentYear, quarter * 3, 1);
+        endDate = new Date(currentYear, (quarter + 1) * 3, 0, 23, 59, 59, 999);
+        break;
+      case '本年':
+        startDate = new Date(currentYear, 0, 1);
+        endDate = new Date(currentYear, 11, 31, 23, 59, 59, 999);
+        break;
+      default:
+        startDate = new Date(currentYear, currentMonth, 1);
+        endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
+    }
+    
+    console.log(`篩選時間週期: ${period}`);
+    console.log(`開始日期: ${startDate.toISOString()}`);
+    console.log(`結束日期: ${endDate.toISOString()}`);
+    
+    return records.filter(record => {
+      const recordDate = new Date(record.recordDate);
+      return recordDate >= startDate && recordDate <= endDate;
+    });
+  };
 
   // 獲取財務報告數據
   const fetchFinancialReport = async () => {
@@ -50,14 +93,21 @@ export default function FinancialReport() {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          const records = data.data.records;
+          const allRecords = data.data.records;
+          
+          // 根據選擇的時間週期篩選記錄
+          const filtered = filterRecordsByPeriod(allRecords, selectedPeriod);
+          setFilteredRecords(filtered);
+          
+          console.log(`總記錄數: ${allRecords.length}`);
+          console.log(`篩選後記錄數: ${filtered.length}`);
           
           // 計算統計數據
-          const totalIncome = records
+          const totalIncome = filtered
             .filter((record: FinancialRecord) => record.recordType === 'income')
             .reduce((sum: number, record: FinancialRecord) => sum + record.totalAmount, 0);
           
-          const totalExpense = records
+          const totalExpense = filtered
             .filter((record: FinancialRecord) => record.recordType === 'expense')
             .reduce((sum: number, record: FinancialRecord) => sum + record.totalAmount, 0);
           
@@ -68,7 +118,7 @@ export default function FinancialReport() {
           });
 
           // 計算前5名成員
-          const memberStats = records.reduce((acc: Record<string, { totalAmount: number; recordCount: number }>, record: FinancialRecord) => {
+          const memberStats = filtered.reduce((acc: Record<string, { totalAmount: number; recordCount: number }>, record: FinancialRecord) => {
             if (!acc[record.memberName]) {
               acc[record.memberName] = { totalAmount: 0, recordCount: 0 };
             }
@@ -89,7 +139,7 @@ export default function FinancialReport() {
           setTopMembers(topMembersList);
 
           // 計算熱門項目
-          const itemStats = records.reduce((acc: Record<string, { totalAmount: number; recordCount: number }>, record: FinancialRecord) => {
+          const itemStats = filtered.reduce((acc: Record<string, { totalAmount: number; recordCount: number }>, record: FinancialRecord) => {
             if (!acc[record.item]) {
               acc[record.item] = { totalAmount: 0, recordCount: 0 };
             }
@@ -128,6 +178,15 @@ export default function FinancialReport() {
     }).format(amount);
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('zh-TW', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  };
+
   if (!user || user.role !== 'admin') {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -162,6 +221,11 @@ export default function FinancialReport() {
             <option value="本季度">本季度</option>
             <option value="本年">本年</option>
           </select>
+          
+          {/* 顯示篩選結果 */}
+          <div className="text-sm text-gray-600">
+            找到 {filteredRecords.length} 筆記錄
+          </div>
         </div>
       </div>
 
@@ -193,7 +257,7 @@ export default function FinancialReport() {
             </div>
             <div className="p-3 bg-red-100 rounded-full">
               <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
           </div>
