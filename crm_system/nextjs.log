@@ -293,3 +293,102 @@ Error: Route "/api/financial-records/[id]" used `params.id`. `params` should be 
  GET /favicon.ico?favicon.45db1c09.ico 200 in 255ms
  GET /api/financial-records 200 in 45ms
  GET /api/financial-records 200 in 44ms
+ GET /financial_management/report 200 in 88ms
+ GET /api/auth/me 200 in 68ms
+ GET /_next/webpack-hmr 404 in 71ms
+ GET /api/financial-records 200 in 81ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 302ms
+ GET /financial_management/add 200 in 43ms
+開始創建財務記錄...
+數據庫連接成功
+接收到的請求體: {
+  recordType: 'income',
+  memberName: '陳伯',
+  item: '飲食費用',
+  details: '',
+  location: '黃大仙',
+  unitPrice: 100,
+  quantity: 1,
+  recordDate: '2025-08-13T07:24',
+  createdBy: '689308eab3b09e635ae9f4c0'
+}
+解析後的字段: {
+  recordType: 'income',
+  memberName: '陳伯',
+  item: '飲食費用',
+  details: '',
+  location: '黃大仙',
+  unitPrice: 100,
+  quantity: 1,
+  recordDate: '2025-08-13T07:24',
+  createdBy: '689308eab3b09e635ae9f4c0'
+}
+所有驗證通過，開始創建記錄...
+記錄對象創建成功: {
+  recordType: 'income',
+  memberName: '陳伯',
+  item: '飲食費用',
+  details: '',
+  location: '黃大仙',
+  unitPrice: 100,
+  quantity: 1,
+  recordDate: 2025-08-12T23:24:00.000Z,
+  createdBy: new ObjectId('689308eab3b09e635ae9f4c0'),
+  _id: new ObjectId('689c3dcb2d69a190446b43e4')
+}
+記錄保存成功，ID: new ObjectId('689c3dcb2d69a190446b43e4')
+ POST /api/financial-records 201 in 67ms
+ GET /financial_management 200 in 40ms
+ GET /api/financial-records 200 in 43ms
+ GET /api/financial-records 200 in 43ms
+ GET /api/financial-records 200 in 406ms
+ GET /api/financial-records 200 in 89ms
+ GET /api/financial-records 200 in 43ms
+ GET /financial_management 200 in 66ms
+ GET /api/auth/me 200 in 52ms
+ GET /_next/webpack-hmr 404 in 57ms
+ GET /api/financial-records 200 in 67ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 255ms
+ GET /financial_management/add 200 in 38ms
+開始創建財務記錄...
+數據庫連接成功
+接收到的請求體: {
+  recordType: 'income',
+  memberName: '羅太太',
+  item: '清潔費用',
+  details: '清潔費用',
+  location: '石門',
+  unitPrice: 300,
+  quantity: 2,
+  recordDate: '2025-08-13T15:28',
+  createdBy: '689308eab3b09e635ae9f4c0'
+}
+解析後的字段: {
+  recordType: 'income',
+  memberName: '羅太太',
+  item: '清潔費用',
+  details: '清潔費用',
+  location: '石門',
+  unitPrice: 300,
+  quantity: 2,
+  recordDate: '2025-08-13T15:28',
+  createdBy: '689308eab3b09e635ae9f4c0'
+}
+所有驗證通過，開始創建記錄...
+記錄對象創建成功: {
+  recordType: 'income',
+  memberName: '羅太太',
+  item: '清潔費用',
+  details: '清潔費用',
+  location: '石門',
+  unitPrice: 300,
+  quantity: 2,
+  recordDate: 2025-08-13T07:28:00.000Z,
+  createdBy: new ObjectId('689308eab3b09e635ae9f4c0'),
+  _id: new ObjectId('689c3ea32d69a190446b43f9')
+}
+記錄保存成功，ID: new ObjectId('689c3ea32d69a190446b43f9')
+ POST /api/financial-records 201 in 54ms
+ GET /financial_management 200 in 31ms
+ GET /api/financial-records 200 in 43ms
+ GET /api/financial-records 200 in 41ms
