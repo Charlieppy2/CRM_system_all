@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import EditFinancialRecordModal from '@/app/components/EditFinancialRecordModal';
+import { formatHKTime } from '@/lib/utils';
 
 interface FinancialRecord {
   _id: string;
@@ -137,13 +138,7 @@ export default function FinancialOverview() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('zh-TW', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    return formatHKTime(dateString);
   };
 
   if (!user || user.role !== 'admin') {

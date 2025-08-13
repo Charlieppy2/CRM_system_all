@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import { getCurrentHKTimeForInput } from '@/lib/utils';
 
 export default function AddFinancialRecord() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function AddFinancialRecord() {
     location: '灣仔',
     unitPrice: 0,
     quantity: 1,
-    recordDate: new Date().toISOString().split('T')[0]
+    recordDate: getCurrentHKTimeForInput()
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -268,7 +269,7 @@ export default function AddFinancialRecord() {
               記錄日期
             </label>
             <input
-              type="date"
+              type="datetime-local"
               id="recordDate"
               name="recordDate"
               value={formData.recordDate}
