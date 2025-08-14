@@ -392,3 +392,345 @@ Error: Route "/api/financial-records/[id]" used `params.id`. `params` should be 
  GET /financial_management 200 in 31ms
  GET /api/financial-records 200 in 43ms
  GET /api/financial-records 200 in 41ms
+ GET /financial_management 200 in 65ms
+ GET /api/auth/me 200 in 60ms
+ GET /_next/webpack-hmr 404 in 62ms
+ GET /api/financial-records 200 in 72ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 238ms
+ GET /financial_management/by_name 200 in 41ms
+ GET /api/financial-records? 200 in 44ms
+ GET /api/financial-records 200 in 45ms
+ GET /api/financial-records 200 in 39ms
+ GET /api/financial-records? 200 in 42ms
+ GET /financial_management/report 200 in 45ms
+ GET /api/financial-records 200 in 56ms
+ GET /api/financial-records 200 in 39ms
+ GET /financial_management/add 200 in 34ms
+ GET /financial_management 200 in 41ms
+ GET /api/financial-records 200 in 46ms
+ GET /api/financial-records 200 in 39ms
+ GET / 200 in 107ms
+ GET /api/auth/me 200 in 52ms
+ GET /_next/webpack-hmr 404 in 53ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 250ms
+ GET /financial_management/report 200 in 77ms
+ GET /api/auth/me 200 in 52ms
+ GET /_next/webpack-hmr 404 in 52ms
+ GET /api/financial-records 200 in 72ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 236ms
+ GET /financial_management 200 in 47ms
+ GET /api/auth/me 200 in 45ms
+ GET /api/financial-records 200 in 57ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 239ms
+ GET /_next/webpack-hmr 404 in 42ms
+ HEAD / 200 in 152ms
+ HEAD / 200 in 50ms
+ GET / 200 in 63ms
+ GET /api/auth/me 200 in 54ms
+ GET /_next/webpack-hmr 404 in 58ms
+ GET / 200 in 58ms
+ GET /api/auth/me 200 in 44ms
+ GET /_next/webpack-hmr 404 in 41ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 228ms
+ GET / 200 in 61ms
+ GET /api/auth/me 200 in 44ms
+ GET /_next/webpack-hmr 404 in 47ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 247ms
+ GET / 200 in 61ms
+ GET /api/auth/me 200 in 40ms
+ GET /_next/webpack-hmr 404 in 43ms
+ GET / 200 in 67ms
+ GET /api/auth/me 200 in 69ms
+ GET /_next/webpack-hmr 404 in 72ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 248ms
+ GET /attendance 200 in 43ms
+ GET /api/attendance/accessible 200 in 38ms
+ GET /api/attendance/accessible 200 in 30ms
+ GET / 200 in 65ms
+ GET /api/auth/me 401 in 38ms
+ ✓ Compiled /login in 339ms
+ GET /login?redirect=%2F 200 in 362ms
+ ⚠ Cross origin request detected from 172.16.18.161 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET /_next/webpack-hmr 404 in 45ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 236ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 222ms
+ ✓ Compiled /api/auth/login in 66ms
+ POST /api/auth/login 200 in 348ms
+ GET / 200 in 28ms
+ GET / 200 in 34ms
+ GET / 200 in 38ms
+ GET /attendance 200 in 42ms
+ GET /api/attendance/accessible 200 in 40ms
+ GET /api/attendance/accessible 200 in 44ms
+ GET /attendance/activity_management 200 in 56ms
+ GET /api/activities 200 in 36ms
+ GET /api/accounts?role=trainer 200 in 39ms
+ GET /api/activities 200 in 40ms
+ GET /api/accounts?role=trainer 200 in 39ms
+ GET /attendance/check 200 in 35ms
+ GET /api/attendance/by-date?date=2025-08-13 200 in 39ms
+ GET /api/attendance/by-date?date=2025-08-13 200 in 39ms
+ GET /api/attendance/by-date?date=2025-08-12 200 in 49ms
+ GET /api/attendance/by-date?date=2025-08-11 200 in 43ms
+ GET /api/attendance/by-date?date=2025-08-08 200 in 45ms
+ GET /attendance/add 200 in 44ms
+ GET /api/activities 200 in 32ms
+ GET /api/activities 200 in 31ms
+ GET /attendance/by_name 200 in 41ms
+ GET /api/attendance/accessible 200 in 38ms
+ GET /api/attendance/accessible 200 in 38ms
+ GET /api/activities 200 in 47ms
+ GET /api/activities 200 in 46ms
+ GET /attendance/by_name 200 in 43ms
+ GET /api/attendance/accessible 200 in 37ms
+ GET /api/attendance/accessible 200 in 39ms
+ GET /member_management/profile 200 in 40ms
+ GET /api/accounts?role=member 200 in 36ms
+ GET /api/accounts?role=member 200 in 39ms
+ GET /api/attendance/by-member?name=%E6%9E%97%E5%A4%AA&contact=50000003 200 in 25ms
+ GET /api/attendance/by-member?name=%E6%9E%97%E5%A4%AA&contact=50000003 200 in 26ms
+ GET /trainer_management/profile 200 in 43ms
+ GET /api/accounts?role=trainer 200 in 29ms
+ GET /api/accounts?role=trainer 200 in 28ms
+ GET /api/trainer-profile/689318cbb3b09e635ae9f690 200 in 37ms
+ GET /api/activities/by-trainer?trainerId=689318cbb3b09e635ae9f690 200 in 42ms
+ GET /api/trainer-profile/689318cbb3b09e635ae9f690 200 in 42ms
+ GET /api/activities/by-trainer?trainerId=689318cbb3b09e635ae9f690 200 in 46ms
+(node:19060) [MONGOOSE] Warning: Duplicate schema index on {"trainerId":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ GET /financial_management 200 in 44ms
+ GET /api/financial-records 200 in 42ms
+ GET /api/financial-records 200 in 38ms
+ GET /financial_management/by_name 200 in 41ms
+ GET /api/financial-records? 200 in 54ms
+ GET /api/financial-records 200 in 56ms
+ GET /api/financial-records 200 in 53ms
+ GET /api/financial-records? 200 in 159ms
+ GET /api/financial-records?memberName=%E5%BC%B5%E4%B8%89 200 in 55ms
+ GET /financial_management/report 200 in 41ms
+ GET /api/financial-records 200 in 44ms
+ GET /api/financial-records 200 in 41ms
+ GET /financial_management/add 200 in 39ms
+開始創建財務記錄...
+數據庫連接成功
+接收到的請求體: {
+  recordType: 'income',
+  memberName: '張伯伯',
+  item: '交通費',
+  details: '',
+  location: '黃大仙',
+  unitPrice: 300,
+  quantity: 1,
+  recordDate: '2025-08-12T20:07',
+  createdBy: '689308eab3b09e635ae9f4c0'
+}
+解析後的字段: {
+  recordType: 'income',
+  memberName: '張伯伯',
+  item: '交通費',
+  details: '',
+  location: '黃大仙',
+  unitPrice: 300,
+  quantity: 1,
+  recordDate: '2025-08-12T20:07',
+  createdBy: '689308eab3b09e635ae9f4c0'
+}
+所有驗證通過，開始創建記錄...
+記錄對象創建成功: {
+  recordType: 'income',
+  memberName: '張伯伯',
+  item: '交通費',
+  details: '',
+  location: '黃大仙',
+  unitPrice: 300,
+  quantity: 1,
+  recordDate: 2025-08-12T12:07:00.000Z,
+  createdBy: new ObjectId('689308eab3b09e635ae9f4c0'),
+  _id: new ObjectId('689c47fd2d69a190446b4474')
+}
+記錄保存成功，ID: new ObjectId('689c47fd2d69a190446b4474')
+ POST /api/financial-records 201 in 58ms
+ GET /financial_management 200 in 50ms
+ GET /api/financial-records 200 in 40ms
+ GET /api/financial-records 200 in 39ms
+ GET /financial_management/by_name 200 in 48ms
+ GET /api/financial-records 200 in 63ms
+ GET /api/financial-records? 200 in 54ms
+ GET /api/financial-records 200 in 64ms
+ GET /api/financial-records? 200 in 65ms
+ GET /financial_management/report 200 in 41ms
+ GET /api/financial-records 200 in 45ms
+ GET /api/financial-records 200 in 45ms
+ GET /financial_management/add 200 in 41ms
+ ✓ Compiled /account_management/admin in 223ms
+ GET /account_management/admin 200 in 248ms
+ GET /api/accounts?role=admin 200 in 23ms
+ GET /api/accounts?role=admin 200 in 19ms
+ ✓ Compiled /api/accounts/[id] in 36ms
+ GET /api/accounts/689308eab3b09e635ae9f4c0 200 in 525ms
+ GET /api/accounts/689308eab3b09e635ae9f4c0 200 in 518ms
+ ✓ Compiled /account_management/trainer in 133ms
+ GET /account_management/trainer 200 in 155ms
+ GET /api/accounts?role=trainer 200 in 27ms
+ GET /api/accounts?role=trainer 200 in 26ms
+ GET /api/accounts/689318cbb3b09e635ae9f690 200 in 24ms
+ GET /api/accounts/689318cbb3b09e635ae9f690 200 in 27ms
+ ✓ Compiled /account_management/member in 116ms
+ GET /account_management/member 200 in 138ms
+ GET /api/accounts?role=member 200 in 24ms
+ GET /api/accounts?role=member 200 in 25ms
+ GET /api/accounts/68945f68f8c8ac066ce45744 200 in 22ms
+ GET /api/accounts/68945f68f8c8ac066ce45744 200 in 21ms
+ GET / 200 in 44ms
+ GET /attendance 200 in 30ms
+ GET /api/attendance/accessible 200 in 35ms
+ GET /api/attendance/accessible 200 in 32ms
+ GET /attendance/activity_management 200 in 59ms
+ GET /api/activities 200 in 32ms
+ GET /api/accounts?role=trainer 200 in 33ms
+ GET /api/activities 200 in 39ms
+ GET /api/accounts?role=trainer 200 in 40ms
+ GET /attendance/check 200 in 33ms
+ GET /api/attendance/by-date?date=2025-08-13 200 in 103ms
+ GET /api/attendance/by-date?date=2025-08-13 200 in 30ms
+ GET /attendance/add 200 in 24ms
+ GET /api/activities 200 in 25ms
+ GET /api/activities 200 in 23ms
+ GET /attendance/by_name 200 in 41ms
+ GET /api/attendance/accessible 200 in 31ms
+ GET /api/attendance/accessible 200 in 27ms
+ GET /attendance/check 200 in 42ms
+ GET /api/attendance/by-date?date=2025-08-13 200 in 32ms
+ GET /api/attendance/by-date?date=2025-08-13 200 in 28ms
+ GET /member_management/profile 200 in 42ms
+ GET /api/accounts?role=member 200 in 101ms
+ GET /api/accounts?role=member 200 in 29ms
+ GET /api/attendance/by-member?name=%E6%9E%97%E5%A4%AA&contact=50000003 200 in 31ms
+ GET /api/attendance/by-member?name=%E6%9E%97%E5%A4%AA&contact=50000003 200 in 20ms
+ GET /trainer_management/profile 200 in 33ms
+ GET /api/accounts?role=trainer 200 in 28ms
+ GET /api/accounts?role=trainer 200 in 28ms
+ GET /api/activities/by-trainer?trainerId=689318cbb3b09e635ae9f690 200 in 29ms
+ GET /api/trainer-profile/689318cbb3b09e635ae9f690 200 in 33ms
+ GET /api/activities/by-trainer?trainerId=689318cbb3b09e635ae9f690 200 in 24ms
+ GET /api/trainer-profile/689318cbb3b09e635ae9f690 200 in 44ms
+(node:19516) [MONGOOSE] Warning: Duplicate schema index on {"trainerId":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ GET /financial_management 200 in 40ms
+ GET /api/financial-records 200 in 42ms
+ GET /api/financial-records 200 in 39ms
+ GET /financial_management/report 200 in 32ms
+ GET /api/financial-records 200 in 36ms
+ GET /api/financial-records 200 in 36ms
+ GET /financial_management/report 200 in 21ms
+ GET /financial_management/add 200 in 40ms
+ GET /account_management/admin 200 in 37ms
+ GET /api/accounts?role=admin 200 in 29ms
+ GET /api/accounts?role=admin 200 in 24ms
+ GET /api/accounts/689308eab3b09e635ae9f4c0 200 in 26ms
+ GET /api/accounts/689308eab3b09e635ae9f4c0 200 in 22ms
+ GET / 200 in 50ms
+ GET / 200 in 68ms
+ GET /api/auth/me 200 in 42ms
+ GET /_next/webpack-hmr 404 in 45ms
+ GET / 200 in 74ms
+ GET /api/auth/me 200 in 40ms
+ GET /_next/webpack-hmr 404 in 42ms
+ GET / 200 in 101ms
+ GET /_next/webpack-hmr 404 in 63ms
+ GET /api/auth/me 200 in 85ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 269ms
+ GET / 200 in 109ms
+ GET /api/auth/me 401 in 28ms
+ GET /login?redirect=%2F 200 in 37ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 228ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 225ms
+ GET /_next/webpack-hmr 404 in 53ms
+ POST /api/auth/login 401 in 278ms
+ GET / 200 in 74ms
+ GET /api/auth/me 401 in 29ms
+ GET /_next/webpack-hmr 404 in 47ms
+ GET /login?redirect=%2F 200 in 19ms
+ POST /api/auth/login 200 in 304ms
+ GET / 200 in 19ms
+ GET / 200 in 17ms
+ GET / 200 in 14ms
+ GET /attendance 200 in 32ms
+ GET /api/attendance/accessible 200 in 38ms
+ GET /api/attendance/accessible 200 in 34ms
+ GET /attendance/by_name 200 in 30ms
+ GET /api/attendance/accessible 200 in 43ms
+ GET /api/attendance/accessible 200 in 30ms
+ GET /member_management/profile 200 in 35ms
+ GET /api/accounts?role=member 200 in 31ms
+ GET /api/accounts?role=member 200 in 28ms
+ GET /api/attendance/by-member?name=%E6%9E%97%E5%A4%AA&contact=50000003 200 in 30ms
+ GET /api/attendance/by-member?name=%E6%9E%97%E5%A4%AA&contact=50000003 200 in 36ms
+ GET /trainer_management/profile 200 in 36ms
+ GET /api/accounts?role=trainer 200 in 29ms
+ GET /api/accounts?role=trainer 200 in 33ms
+ GET /api/trainer-profile/689318cbb3b09e635ae9f690 200 in 38ms
+ GET /api/activities/by-trainer?trainerId=689318cbb3b09e635ae9f690 200 in 42ms
+ GET /api/trainer-profile/689318cbb3b09e635ae9f690 200 in 28ms
+ GET /api/activities/by-trainer?trainerId=689318cbb3b09e635ae9f690 200 in 29ms
+(node:26478) [MONGOOSE] Warning: Duplicate schema index on {"trainerId":1} found. This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ GET /financial_management 200 in 48ms
+ GET /api/auth/me 200 in 54ms
+ GET /_next/webpack-hmr 404 in 53ms
+ GET /api/financial-records 200 in 67ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 229ms
+ GET /financial_management 200 in 49ms
+ GET /api/auth/me 200 in 66ms
+ GET /_next/webpack-hmr 404 in 62ms
+ GET /api/financial-records 200 in 80ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 252ms
+ GET / 200 in 48ms
+ GET /api/auth/me 200 in 39ms
+ GET /_next/webpack-hmr 404 in 40ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 241ms
+ HEAD / 200 in 68ms
+ HEAD / 200 in 35ms
+ GET /financial_management 200 in 73ms
+ GET /api/auth/me 200 in 45ms
+ GET /api/financial-records 200 in 63ms
+ GET /_next/webpack-hmr 404 in 67ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 246ms
+ GET /financial_management/report 200 in 102ms
+ GET /api/auth/me 200 in 56ms
+ GET /_next/webpack-hmr 404 in 55ms
+ GET /api/financial-records 200 in 88ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 247ms
+ GET /attendance 200 in 74ms
+ GET /api/auth/me 200 in 33ms
+ GET /api/attendance/accessible 200 in 45ms
+ GET /_next/webpack-hmr 404 in 55ms
+ GET /attendance/add 200 in 43ms
+ GET /api/activities 200 in 35ms
+ GET /api/activities 200 in 33ms
+ GET /attendance 200 in 38ms
+ GET /api/attendance/accessible 200 in 36ms
+ GET /api/attendance/accessible 200 in 38ms
+ GET / 200 in 47ms
+ GET /financial_management/report 200 in 64ms
+ GET /financial_management 200 in 53ms
+ GET / 200 in 42ms
+ GET / 200 in 39ms
+ GET / 200 in 68ms
+ GET /api/auth/me 200 in 45ms
+ GET /_next/webpack-hmr 404 in 44ms
+ GET / 200 in 65ms
+ GET /api/auth/me 200 in 45ms
+ GET /_next/webpack-hmr 404 in 44ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 247ms
+ GET /attendance 200 in 104ms
+ GET /_next/webpack-hmr 404 in 4032ms
+ GET /api/auth/me 200 in 4281ms
+ GET /api/attendance/accessible 200 in 4293ms
+ GET /financial_management 200 in 126ms
+ GET /_next/webpack-hmr 404 in 45ms
+ GET /favicon.ico?favicon.45db1c09.ico 200 in 232ms
+ GET /api/auth/me 200 in 493ms
+ GET /api/financial-records 200 in 566ms
+[?25h
