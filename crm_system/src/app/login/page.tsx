@@ -65,72 +65,92 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-6">
+        {/* Logo 和標題 */}
+        <div className="text-center">
+          <div className="w-20 h-20 bg-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <span className="text-white text-2xl font-bold">CRM</span>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
             登录您的账号
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="text-sm md:text-base text-gray-600">
             CRM 系统管理平台
           </p>
         </div>
         
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="username" className="sr-only">
-                用户名
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="用户名"
-                value={formData.username}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                密码
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="密码"
-                value={formData.password}
-                onChange={handleChange}
-                disabled={loading}
-              />
-            </div>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          {/* 用戶名輸入 */}
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+              用户名
+            </label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              required
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              placeholder="请输入用户名"
+              value={formData.username}
+              onChange={handleChange}
+              disabled={loading}
+            />
           </div>
 
+          {/* 密碼輸入 */}
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              密码
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              placeholder="请输入密码"
+              value={formData.password}
+              onChange={handleChange}
+              disabled={loading}
+            />
+          </div>
+
+          {/* 錯誤提示 */}
           {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+              <p className="text-red-600 text-sm text-center">{error}</p>
+            </div>
           )}
 
+          {/* 登入按鈕 */}
           <div>
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed"
+              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? '登录中...' : '登录'}
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  登录中...
+                </div>
+              ) : (
+                '登录'
+              )}
             </button>
           </div>
 
-          <div className="text-center">
-            <div className="text-sm text-gray-600">
-              <div className="font-medium">测试账号：</div>
-              <div>用户名：admin</div>
-              <div>密码：password123</div>
+          {/* 測試帳號 */}
+          <div className="bg-blue-50 rounded-lg p-4">
+            <div className="text-center">
+              <p className="text-sm font-medium text-blue-800 mb-2">🧪 測試帳號</p>
+              <div className="text-xs text-blue-700 space-y-1">
+                <div><strong>管理員:</strong> admin / admin123</div>
+                <div><strong>會員:</strong> member1 / member123</div>
+                <div><strong>教練:</strong> trainer1 / trainer123</div>
+              </div>
             </div>
           </div>
         </form>

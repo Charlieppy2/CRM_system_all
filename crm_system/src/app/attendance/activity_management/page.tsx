@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useScrollOptimization } from '@/hooks/useScrollOptimization';
+import ActivityQRCode from '@/components/ActivityQRCode';
 
 interface Activity {
   _id: string;
@@ -346,6 +347,11 @@ export default function ActivityManagementPage() {
                       </div>
                     </div>
                   )}
+                </div>
+
+                {/* QR Code 區域 */}
+                <div className="p-6 border-b border-gray-200">
+                  <ActivityQRCode activity={selectedActivity} />
                 </div>
 
                 {/* 参与者列表 */}

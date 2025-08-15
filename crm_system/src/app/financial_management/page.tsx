@@ -105,283 +105,298 @@ export default function FinancialOverview() {
       });
 
       if (response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          alert('財務記錄刪除成功！');
-          fetchFinancialRecords(); // 重新獲取數據
-        } else {
-          alert(result.message || '刪除失敗');
-        }
+        // 重新獲取數據
+        fetchFinancialRecords();
       } else {
-        alert('刪除失敗，請稍後重試');
+        alert('刪除失敗，請重試');
       }
     } catch (error) {
-      console.error('刪除財務記錄失敗:', error);
-      alert('刪除失敗，請稍後重試');
+      console.error('刪除失敗:', error);
+      alert('刪除失敗，請重試');
     }
   };
 
   // 處理記錄更新
   const handleRecordUpdate = () => {
-    fetchFinancialRecords(); // 重新獲取數據
+    fetchFinancialRecords();
+    setIsEditModalOpen(false);
+    setEditingRecord(null);
+  };
+
+  // 格式化貨幣
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('zh-TW', {
+      style: 'currency',
+      currency: 'HKD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  // 格式化日期
+  const formatDate = (dateString: string) => {
+    try {
+      return formatHKTime(dateString, {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+    } catch (error) {
+      return dateString;
+    }
   };
 
   useEffect(() => {
     fetchFinancialRecords();
   }, []);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('zh-TW', {
-      style: 'currency',
-      currency: 'TWD'
-    }).format(amount);
-  };
-
-  const formatDate = (dateString: string) => {
-    return formatHKTime(dateString);
-  };
-
-  if (!user || user.role !== 'admin') {
+  if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">無權限訪問</h1>
-          <p className="text-gray-600">您沒有權限訪問此頁面</p>
+          <p className="text-gray-600">請先登入</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6">
-      {/* 頁面標題 */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">財務管理</h1>
-        <p className="text-gray-600">管理成員的收支記錄</p>
-      </div>
+    <div className="min-h-screen bg-gray-50 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* 頁面標題 */}
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">財務管理</h1>
+          <p className="text-sm md:text-base text-gray-600">管理成員的收支記錄</p>
+        </div>
 
-      {/* 搜索和操作按鈕 */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div className="flex-1 max-w-md">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="搜索成員、項目、詳情或地點..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <svg
-              className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        {/* 搜索和操作按鈕 */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div className="flex-1 w-full sm:max-w-md">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="搜索成員、項目、詳情或地點..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm md:text-base"
               />
-            </svg>
-          </div>
-        </div>
-        <div className="flex gap-3">
-          <button
-            onClick={handleSearch}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            搜索
-          </button>
-          <Link
-            href="/financial_management/add"
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-          >
-            + 新增記錄
-          </Link>
-        </div>
-      </div>
-
-      {/* 記錄計數 */}
-      <div className="mb-6">
-        <p className="text-gray-600">
-          找到 {totalRecords} 筆記錄
-        </p>
-      </div>
-
-      {/* 財務概覽卡片 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">總收入</p>
-              <p className="text-2xl font-bold text-green-600">
-                {formatCurrency(stats.totalIncome)}
-              </p>
-            </div>
-            <div className="p-3 bg-green-100 rounded-full">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+              <svg
+                className="absolute left-3 top-3 h-5 w-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
             </div>
           </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">總支出</p>
-              <p className="text-2xl font-bold text-red-600">
-                {formatCurrency(stats.totalExpense)}
-              </p>
-            </div>
-            <div className="p-3 bg-red-100 rounded-full">
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-              </svg>
-            </div>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+            <button
+              onClick={handleSearch}
+              className="w-full sm:w-auto px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm md:text-base font-medium"
+            >
+              搜索
+            </button>
+            <Link
+              href="/financial_management/add"
+              className="w-full sm:w-auto px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm md:text-base font-medium text-center"
+            >
+              + 新增記錄
+            </Link>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">淨額</p>
-              <p className={`text-2xl font-bold ${stats.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {formatCurrency(stats.netAmount)}
-              </p>
-            </div>
-            <div className={`p-3 rounded-full ${stats.netAmount >= 0 ? 'bg-green-100' : 'bg-red-100'}`}>
-              <svg className={`w-6 h-6 ${stats.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-          </div>
+        {/* 記錄計數 */}
+        <div className="mb-6">
+          <p className="text-gray-600 text-sm md:text-base">
+            找到 {totalRecords} 筆記錄
+          </p>
         </div>
-      </div>
 
-      {/* 財務記錄表格 */}
-      <div className="bg-white rounded-lg shadow-md border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-800">
-            財務記錄 ({totalRecords}筆)
-          </h2>
+        {/* 財務概覽卡片 */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
+          <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">總收入</p>
+                <p className="text-xl md:text-2xl font-bold text-green-600">
+                  {formatCurrency(stats.totalIncome)}
+                </p>
+              </div>
+              <div className="p-2 md:p-3 bg-green-100 rounded-full">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">總支出</p>
+                <p className="text-xl md:text-2xl font-bold text-red-600">
+                  {formatCurrency(stats.totalExpense)}
+                </p>
+              </div>
+              <div className="p-2 md:p-3 bg-red-100 rounded-full">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200 sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">淨額</p>
+                <p className={`text-xl md:text-2xl font-bold ${stats.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {formatCurrency(stats.netAmount)}
+                </p>
+              </div>
+              <div className={`p-2 md:p-3 rounded-full ${stats.netAmount >= 0 ? 'bg-green-100' : 'bg-red-100'}`}>
+                <svg className={`w-5 h-5 md:w-6 md:h-6 ${stats.netAmount >= 0 ? 'text-green-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
-        
-        {isLoading ? (
-          <div className="p-6 text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="mt-2 text-gray-600">載入中...</p>
+
+        {/* 財務記錄表格 */}
+        <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+          <div className="px-4 md:px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-800">
+              財務記錄 ({totalRecords}筆)
+            </h2>
           </div>
-        ) : records.length === 0 ? (
-          <div className="p-6 text-center">
-            <p className="text-gray-500">暫無財務記錄</p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    時間
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    成員
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    項目
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    詳情
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    地點
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    單價
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    數量
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    總額
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    類型
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    操作
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {records.map((record) => (
-                  <tr key={record._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatDate(record.recordDate)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {record.memberName}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {record.item}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">
-                      {record.details || '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {record.location}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatCurrency(record.unitPrice)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {record.quantity}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {formatCurrency(record.totalAmount)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        record.recordType === 'income' 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {record.recordType === 'income' ? '收入' : '支出'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button 
-                        onClick={() => handleEdit(record)}
-                        className="text-blue-600 hover:text-blue-900 mr-3"
-                      >
-                        修改
-                      </button>
-                      <button 
-                        onClick={() => handleDelete(record._id)}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        刪除
-                      </button>
-                    </td>
+          
+          {isLoading ? (
+            <div className="p-6 text-center">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <p className="mt-2 text-gray-600">載入中...</p>
+            </div>
+          ) : records.length === 0 ? (
+            <div className="p-6 text-center">
+              <p className="text-gray-500">暫無財務記錄</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      時間
+                    </th>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      成員
+                    </th>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      項目
+                    </th>
+                    <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      詳情
+                    </th>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      地點
+                    </th>
+                    <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      單價
+                    </th>
+                    <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      數量
+                    </th>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      總額
+                    </th>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      類型
+                    </th>
+                    <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      操作
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {records.map((record) => (
+                    <tr key={record._id} className="hover:bg-gray-50">
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm text-gray-900">
+                        {formatDate(record.recordDate)}
+                      </td>
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm font-medium text-gray-900">
+                        {record.memberName}
+                      </td>
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm text-gray-900">
+                        {record.item}
+                      </td>
+                      <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs truncate">
+                        {record.details || '-'}
+                      </td>
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm text-gray-900">
+                        {record.location}
+                      </td>
+                      <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {formatCurrency(record.unitPrice)}
+                      </td>
+                      <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {record.quantity}
+                      </td>
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm font-medium text-gray-900">
+                        {formatCurrency(record.totalAmount)}
+                      </td>
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          record.recordType === 'income' 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-red-100 text-red-800'
+                        }`}>
+                          {record.recordType === 'income' ? '收入' : '支出'}
+                        </span>
+                      </td>
+                      <td className="px-3 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm font-medium">
+                        <div className="flex flex-col sm:flex-row gap-1 sm:gap-3">
+                          <button 
+                            onClick={() => handleEdit(record)}
+                            className="text-blue-600 hover:text-blue-900"
+                          >
+                            修改
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(record._id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            刪除
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
 
-      {/* 修改財務記錄模態框 */}
-      <EditFinancialRecordModal
-        isOpen={isEditModalOpen}
-        onClose={() => {
-          setIsEditModalOpen(false);
-          setEditingRecord(null);
-        }}
-        record={editingRecord}
-        onUpdate={handleRecordUpdate}
-      />
+        {/* 修改財務記錄模態框 */}
+        <EditFinancialRecordModal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setEditingRecord(null);
+          }}
+          record={editingRecord}
+          onUpdate={handleRecordUpdate}
+        />
+      </div>
     </div>
   );
 } 

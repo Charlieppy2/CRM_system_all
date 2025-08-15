@@ -327,6 +327,33 @@ export default function Navigation() {
                           按姓名分類
                         </Link>
                       </li>
+                      <li>
+                        <Link
+                          href="/attendance/qr-scan"
+                          className={`block px-3 py-2 text-sm rounded-md transition-colors ${
+                            pathname === '/attendance/qr-scan'
+                              ? 'bg-blue-50 text-blue-700 border-l-2 border-blue-700'
+                              : 'text-gray-600 hover:bg-gray-100'
+                          }`}
+                        >
+                          📱 QR Code 掃描
+                        </Link>
+                      </li>
+                      {user?.role === 'admin' && (
+                        <li>
+                          <Link
+                            href="/attendance/qr-bulk"
+                            className={`block px-3 py-2 text-sm rounded-md transition-colors ${
+                              pathname === '/attendance/qr-bulk'
+                                ? 'bg-blue-50 text-blue-700 border-l-2 border-blue-700'
+                                : 'text-gray-600 hover:bg-gray-100'
+                            }`}
+                          >
+                            🖨️ 批量生成 QR Code
+                          </Link>
+                        </li>
+                      )}
+
                     </ul>
                   )}
                 </div>
@@ -369,7 +396,7 @@ export default function Navigation() {
                           <Link
                             href="/member_management/profile"
                             className={`block px-3 py-2 text-sm rounded-md transition-colors ${
-                              pathname === '/member_management/profile'
+                              pathname.startsWith('/member_management/profile')
                                 ? 'bg-blue-50 text-blue-700 border-l-2 border-blue-700'
                                 : 'text-gray-600 hover:bg-gray-100'
                             }`}
@@ -420,7 +447,7 @@ export default function Navigation() {
                           <Link
                             href="/trainer_management/profile"
                             className={`block px-3 py-2 text-sm rounded-md transition-colors ${
-                              pathname === '/trainer_management/profile'
+                              pathname.startsWith('/trainer_management/profile')
                                 ? 'bg-blue-50 text-blue-700 border-l-2 border-blue-700'
                                 : 'text-gray-600 hover:bg-gray-100'
                             }`}
