@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useScrollOptimization } from '@/hooks/useScrollOptimization';
 import ActivityQRCode from '@/components/ActivityQRCode';
+import { IActivity } from '@/models/Activity';
 
 interface Activity {
   _id: string;
@@ -39,6 +40,10 @@ export default function ActivityManagementPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  
+  // 展開/收縮狀態
+  const [isLeftPanelCollapsed, setIsLeftPanelCollapsed] = useState(false);
+  const [isRightPanelCollapsed, setIsRightPanelCollapsed] = useState(false);
 
   // 添加活动表单数据
   const [addFormData, setAddFormData] = useState({
@@ -228,52 +233,72 @@ export default function ActivityManagementPage() {
       )}
 
       {/* 主要内容区域 */}
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <div className="flex h-auto min-h-96">
+      <div className="bg-white shadow rounded-lg overflow-hidden" style={{ height: 'calc(100vh - 200px)' }}>
+        <div className="flex h-full">
           {/* 左侧 - 活动列表 */}
-          <div className="w-1/3 border-r border-gray-200">
-            <div className="p-4 bg-gray-50 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">活動列表</h2>
-              <p className="text-sm text-gray-600">共 {activities.length} 個活動</p>
-            </div>
-            
-            <div className="overflow-y-auto max-h-96">
-              {isLoadingActivities ? (
-                <div className="flex items-center justify-center h-32">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                </div>
-              ) : activities.length === 0 ? (
-                <div className="flex items-center justify-center h-32 text-gray-500">
-                  暫無活動
-                </div>
-              ) : (
-                <div className="space-y-1 p-2">
-                  {activities.map((activity) => (
-                    <button
-                      key={activity._id}
-                      onClick={() => handleSelectActivity(activity)}
-                      className={`w-full text-left p-3 rounded-lg transition-colors ${
-                        selectedActivity?._id === activity._id
-                          ? 'bg-blue-50 border border-blue-200 text-blue-900'
-                          : 'hover:bg-gray-50 border border-transparent'
-                      }`}
-                    >
-                      <div className="font-medium">{activity.activityName}</div>
-                      <div className="text-sm text-gray-500">
-                        教練: {activity.trainerName} · {activity.location}
-                      </div>
-                      <div className="text-xs text-gray-400">
-                        {formatDateTime(activity.startTime)}
-                      </div>
-                    </button>
-                  ))}
+          <div className={`${isLeftPanelCollapsed ? 'w-12' : 'w-1/3'} border-r border-gray-200 flex flex-col transition-all duration-300`}>
+            <div className="p-4 bg-gray-50 border-b border-gray-200 flex-shrink-0 flex justify-between items-center">
+              {!isLeftPanelCollapsed && (
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">活動列表</h2>
+                  <p className="text-sm text-gray-600">共 {activities.length} 個活動</p>
                 </div>
               )}
+              <button
+                onClick={() => setIsLeftPanelCollapsed(!isLeftPanelCollapsed)}
+                className="p-2 rounded-lg hover:bg-gray-200 transition-colors"
+                title={isLeftPanelCollapsed ? '展開活動列表' : '收縮活動列表'}
+              >
+                <svg 
+                  className={`w-4 h-4 transition-transform duration-200 ${isLeftPanelCollapsed ? 'rotate-180' : ''}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7" />
+                </svg>
+              </button>
             </div>
+            
+            {!isLeftPanelCollapsed && (
+              <div className="overflow-y-auto flex-1">
+                {isLoadingActivities ? (
+                  <div className="flex items-center justify-center h-32">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  </div>
+                ) : activities.length === 0 ? (
+                  <div className="flex items-center justify-center h-32 text-gray-500">
+                    暫無活動
+                  </div>
+                ) : (
+                  <div className="space-y-1 p-2">
+                    {activities.map((activity) => (
+                      <button
+                        key={activity._id}
+                        onClick={() => handleSelectActivity(activity)}
+                        className={`w-full text-left p-3 rounded-lg transition-colors ${
+                          selectedActivity?._id === activity._id
+                            ? 'bg-blue-50 border border-blue-200 text-blue-900'
+                            : 'hover:bg-gray-50 border border-transparent'
+                        }`}
+                      >
+                        <div className="font-medium">{activity.activityName}</div>
+                        <div className="text-sm text-gray-500">
+                          教練: {activity.trainerName} · {activity.location}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          {formatDateTime(activity.startTime)}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* 右侧 - 活动详情 */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col overflow-y-auto">
             {!selectedActivity ? (
               <div className="flex items-center justify-center h-96 text-gray-500">
                 請從左側選擇一個活動
@@ -284,74 +309,85 @@ export default function ActivityManagementPage() {
                 <div className="p-6 border-b border-gray-200">
                   <div className="flex justify-between items-start mb-6">
                     <h2 className="text-xl font-semibold text-gray-900">{selectedActivity.activityName}</h2>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      selectedActivity.isActive 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {selectedActivity.isActive ? '進行中' : '已結束'}
-                    </span>
+                    <button
+                      onClick={() => setIsRightPanelCollapsed(!isRightPanelCollapsed)}
+                      className="p-2 rounded-lg hover:bg-gray-200 transition-colors ml-4"
+                      title={isRightPanelCollapsed ? '展開活動詳情' : '收縮活動詳情'}
+                    >
+                      <svg 
+                        className={`w-4 h-4 transition-transform duration-200 ${isRightPanelCollapsed ? 'rotate-180' : ''}`}
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        負責教練
-                      </label>
-                      <div className="text-gray-900">{selectedActivity.trainerName}</div>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        活動地點
-                      </label>
-                      <div className="text-gray-900">{selectedActivity.location}</div>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        開始時間
-                      </label>
-                      <div className="text-gray-900">{formatDateTime(selectedActivity.startTime)}</div>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        結束時間
-                      </label>
-                      <div className="text-gray-900">{formatDateTime(selectedActivity.endTime)}</div>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        持續時間
-                      </label>
-                      <div className="text-gray-900 font-semibold text-blue-600">{selectedActivity.duration}h</div>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        參與人數
-                      </label>
-                      <div className="text-gray-900">{selectedActivity.participants.length} 人</div>
-                    </div>
-                  </div>
-
-                  {selectedActivity.description && (
-                    <div className="mt-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        活動描述
-                      </label>
-                      <div className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                        {selectedActivity.description}
+                  {!isRightPanelCollapsed && (
+                    <>
+                      <div className="grid grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            負責教練
+                          </label>
+                          <div className="text-gray-900">{selectedActivity.trainerName}</div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            活動地點
+                          </label>
+                          <div className="text-gray-900">{selectedActivity.location}</div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            開始時間
+                          </label>
+                          <div className="text-gray-900">{formatDateTime(selectedActivity.startTime)}</div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            結束時間
+                          </label>
+                          <div className="text-gray-900">{formatDateTime(selectedActivity.endTime)}</div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            持續時間
+                          </label>
+                          <div className="text-gray-900 font-semibold text-blue-600">{selectedActivity.duration}h</div>
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            參與人數
+                          </label>
+                          <div className="text-gray-900">{selectedActivity.participants.length} 人</div>
+                        </div>
                       </div>
-                    </div>
+
+                      {selectedActivity.description && (
+                        <div className="mt-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            活動描述
+                          </label>
+                          <div className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                            {selectedActivity.description}
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
 
                 {/* QR Code 區域 */}
                 <div className="p-6 border-b border-gray-200">
-                  <ActivityQRCode activity={selectedActivity} />
+                  <ActivityQRCode activity={selectedActivity as any} />
                 </div>
 
                 {/* 参与者列表 */}

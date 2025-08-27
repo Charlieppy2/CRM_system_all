@@ -117,7 +117,7 @@ export default function AdminManagementPage() {
 
   // 格式化日期
   const formatDate = (dateString: string) => {
-    if (!dateString) return '从未登录';
+    if (!dateString) return '從未登入';
     return new Date(dateString).toLocaleString('zh-CN');
   };
 

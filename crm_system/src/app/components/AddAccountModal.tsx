@@ -128,7 +128,7 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess, defaultRol
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                密码
+                密碼
               </label>
               <input
                 type="password"
@@ -136,7 +136,7 @@ export default function AddAccountModal({ isOpen, onClose, onSuccess, defaultRol
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="请输入密码"
+                                  placeholder="請輸入密碼"
                 required
               />
             </div>

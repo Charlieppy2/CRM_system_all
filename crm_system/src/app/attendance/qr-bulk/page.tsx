@@ -225,7 +225,7 @@ export default function QRBulkPage() {
                 {activities
                   .filter(activity => selectedActivities.includes(activity._id))
                   .map((activity) => (
-                    <ActivityQRCode key={activity._id} activity={activity} />
+                    <ActivityQRCode key={activity._id} activity={activity as any} />
                   ))}
               </div>
             </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 interface AttendanceRecord {
   _id: string;
@@ -14,7 +15,13 @@ interface AttendanceRecord {
 }
 
 export default function CheckPage() {
+  const searchParams = useSearchParams();
   const [selectedDate, setSelectedDate] = useState(() => {
+    // 從URL參數獲取日期，如果沒有則使用今天
+    const urlDate = searchParams.get('date');
+    if (urlDate) {
+      return urlDate;
+    }
     // 获取本地今天的日期，避免时区问题
     const today = new Date();
     const year = today.getFullYear();
@@ -22,7 +29,11 @@ export default function CheckPage() {
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   });
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(
+    searchParams.get('activity') || null
+  );
   const [records, setRecords] = useState<AttendanceRecord[]>([]);
+  const [filteredRecords, setFilteredRecords] = useState<AttendanceRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
@@ -112,12 +123,24 @@ export default function CheckPage() {
     }
   };
 
-  // 当选择的日期改变时，获取对应的记录
+  // 當選擇的日期改變時，獲取對應的記錄
   useEffect(() => {
     if (selectedDate) {
       fetchRecordsByDate(selectedDate);
     }
   }, [selectedDate]);
+
+  // 當記錄或活動篩選改變時，更新過濾後的記錄
+  useEffect(() => {
+    if (selectedActivity) {
+      const filtered = records.filter(record => 
+        record.activity.toLowerCase().includes(selectedActivity.toLowerCase())
+      );
+      setFilteredRecords(filtered);
+    } else {
+      setFilteredRecords(records);
+    }
+  }, [records, selectedActivity]);
 
   // 格式化显示日期
   const formatDisplayDate = (dateString: string) => {
@@ -139,24 +162,48 @@ export default function CheckPage() {
           <p className="text-sm text-gray-600 mt-1">查看指定日期的出席記錄</p>
         </div>
 
-        {/* 日期选择器 */}
+        {/* 日期选择器和活動篩選器 */}
         <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-          <div className="flex items-center space-x-4">
-            <label htmlFor="date-picker" className="text-sm font-medium text-gray-700">
-              選擇日期：
-            </label>
-            <input
-              id="date-picker"
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-            />
-            {selectedDate && (
-              <span className="text-sm text-gray-600">
-                {formatDisplayDate(selectedDate)}
-              </span>
-            )}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-6">
+            <div className="flex items-center space-x-4">
+              <label htmlFor="date-picker" className="text-sm font-medium text-gray-700">
+                選擇日期：
+              </label>
+              <input
+                id="date-picker"
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              />
+              {selectedDate && (
+                <span className="text-sm text-gray-600">
+                  {formatDisplayDate(selectedDate)}
+                </span>
+              )}
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <label htmlFor="activity-filter" className="text-sm font-medium text-gray-700">
+                活動篩選：
+              </label>
+              <input
+                id="activity-filter"
+                type="text"
+                placeholder="輸入活動名稱進行篩選"
+                value={selectedActivity || ''}
+                onChange={(e) => setSelectedActivity(e.target.value || null)}
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              />
+              {selectedActivity && (
+                <button
+                  onClick={() => setSelectedActivity(null)}
+                  className="text-sm text-red-600 hover:text-red-800"
+                >
+                  清除篩選
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -185,25 +232,29 @@ export default function CheckPage() {
             </div>
           )}
 
-          {!loading && !error && records.length === 0 && (
+          {!loading && !error && filteredRecords.length === 0 && (
             <div className="text-center py-12">
               <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <h3 className="mt-2 text-sm font-medium text-gray-900">沒有記錄</h3>
               <p className="mt-1 text-sm text-gray-500">
-                所選日期 {formatDisplayDate(selectedDate)} 沒有出席記錄
+                {selectedActivity ? `所選活動 "${selectedActivity}" 在 ${formatDisplayDate(selectedDate)} 沒有出席記錄` : `所選日期 ${formatDisplayDate(selectedDate)} 沒有出席記錄`}
               </p>
             </div>
           )}
 
-          {!loading && !error && records.length > 0 && (
+          {!loading && !error && filteredRecords.length > 0 && (
             <div className="overflow-hidden">
               <div className="mb-4">
                 <h2 className="text-lg font-medium text-gray-900">
                   {formatDisplayDate(selectedDate)} 的出席記錄
+                  {selectedActivity && ` - ${selectedActivity}`}
                 </h2>
-                <p className="text-sm text-gray-600">共 {records.length} 筆記錄</p>
+                <p className="text-sm text-gray-600">
+                  共 {filteredRecords.length} 筆記錄
+                  {selectedActivity && records.length !== filteredRecords.length && ` (從 ${records.length} 筆中篩選)`}
+                </p>
               </div>
               
               <div className="overflow-x-auto">
@@ -228,7 +279,7 @@ export default function CheckPage() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {records.map((record, index) => (
+                    {filteredRecords.map((record, index) => (
                       <tr key={record._id} className={`transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50`}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {record.name}

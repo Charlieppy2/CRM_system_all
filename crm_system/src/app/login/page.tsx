@@ -18,7 +18,7 @@ export default function LoginPage() {
   // 获取重定向URL
   const redirectUrl = searchParams.get('redirect') || '/';
 
-  // 如果已经登录，重定向
+  // 如果已經登入，重定向
   useEffect(() => {
     if (user) {
       router.push(redirectUrl);
@@ -55,10 +55,10 @@ export default function LoginPage() {
         // 跳转到重定向URL
         router.push(redirectUrl);
       } else {
-        setError(data.message || '登录失败');
+        setError(data.message || '登入失敗');
       }
     } catch (error) {
-      setError('登录失败，请稍后重试');
+      setError('登入失敗，請稍後重試');
     } finally {
       setLoading(false);
     }
@@ -73,7 +73,7 @@ export default function LoginPage() {
             <span className="text-white text-2xl font-bold">CRM</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-            登录您的账号
+            登入您的帳號
           </h2>
           <p className="text-sm md:text-base text-gray-600">
             CRM 系统管理平台
@@ -84,7 +84,7 @@ export default function LoginPage() {
           {/* 用戶名輸入 */}
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-              用户名
+              用戶名
             </label>
             <input
               id="username"
@@ -92,7 +92,7 @@ export default function LoginPage() {
               type="text"
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              placeholder="请输入用户名"
+              placeholder="請輸入用戶名"
               value={formData.username}
               onChange={handleChange}
               disabled={loading}
@@ -102,7 +102,7 @@ export default function LoginPage() {
           {/* 密碼輸入 */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              密码
+              密碼
             </label>
             <input
               id="password"
@@ -110,7 +110,7 @@ export default function LoginPage() {
               type="password"
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-              placeholder="请输入密码"
+              placeholder="請輸入密碼"
               value={formData.password}
               onChange={handleChange}
               disabled={loading}
@@ -134,10 +134,10 @@ export default function LoginPage() {
               {loading ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  登录中...
+                  登入中...
                 </div>
               ) : (
-                '登录'
+                '登入'
               )}
             </button>
           </div>
@@ -147,7 +147,7 @@ export default function LoginPage() {
             <div className="text-center">
               <p className="text-sm font-medium text-blue-800 mb-2">🧪 測試帳號</p>
               <div className="text-xs text-blue-700 space-y-1">
-                <div><strong>管理員:</strong> admin / admin123</div>
+                <div><strong>管理員:</strong> admin / password123</div>
                 <div><strong>會員:</strong> member1 / member123</div>
                 <div><strong>教練:</strong> trainer1 / trainer123</div>
               </div>

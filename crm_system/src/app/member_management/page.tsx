@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
+import MemberQRCode from '@/components/MemberQRCode';
 
 interface Member {
   _id: string;
@@ -21,6 +22,8 @@ export default function MemberManagement() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [showQRCode, setShowQRCode] = useState(false);
 
   useEffect(() => {
     fetchMembers();
@@ -277,12 +280,25 @@ export default function MemberManagement() {
                       </td>
                       
                       <td className="px-3 md:px-6 py-4 whitespace-nowrap text-xs md:text-sm text-gray-900">
-                        <Link
-                          href={`/member_management/profile/${member._id}`}
-                          className="text-blue-600 hover:text-blue-900 font-medium"
-                        >
-                          查看資料
-                        </Link>
+                        <div className="flex space-x-2">
+                          <Link
+                            href={`/member_management/profile/${member._id}`}
+                            className="text-blue-600 hover:text-blue-900 font-medium"
+                          >
+                            查看資料
+                          </Link>
+                          {member.role === 'member' && (
+                            <button
+                              onClick={() => {
+                                setSelectedMember(member);
+                                setShowQRCode(true);
+                              }}
+                              className="text-green-600 hover:text-green-900 font-medium"
+                            >
+                              生成QR Code
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -291,6 +307,26 @@ export default function MemberManagement() {
             </div>
           )}
         </div>
+
+        {/* QR Code 顯示區域 */}
+        {showQRCode && selectedMember && (
+          <div className="mt-8 bg-white rounded-lg shadow-md border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-800">
+                會員 QR Code
+              </h3>
+              <button
+                onClick={() => setShowQRCode(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <MemberQRCode member={selectedMember} />
+          </div>
+        )}
       </div>
     </div>
   );

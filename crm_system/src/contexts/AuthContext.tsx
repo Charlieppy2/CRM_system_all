@@ -5,7 +5,9 @@ import { useRouter, usePathname } from 'next/navigation';
 
 interface User {
   id: string;
+  _id?: string; // 為了向後兼容
   username: string;
+  name?: string; // 添加name屬性
   role: 'admin' | 'user' | 'trainer' | 'member';
   locations?: string[];
   lastLogin?: string;
@@ -36,7 +38,7 @@ const PUBLIC_ROUTES = [
   '/unauthorized',
 ];
 
-// 检查路径是否需要认证
+    // 檢查路徑是否需要認證
 function isProtectedRoute(pathname: string): boolean {
   return PROTECTED_ROUTES.some(route => {
     if (route === '/') {
@@ -50,28 +52,28 @@ function isPublicRoute(pathname: string): boolean {
   return PUBLIC_ROUTES.some(route => pathname.startsWith(route));
 }
 
-// 检查用户是否有权限访问特定路径
+// 檢查用戶是否有權限訪問特定路徑
 function hasRouteAccess(pathname: string, userRole: string): boolean {
-  // 管理员可以访问所有页面
+      // 管理員可以訪問所有頁面
   if (userRole === 'admin') {
     return true;
   }
   
-  // 教练只能访问首页和出席管理
+      // 教練只能訪問首頁和出席管理
   if (userRole === 'trainer') {
     if (pathname === '/' || pathname.startsWith('/attendance')) {
       return true;
     }
-    // 不能访问账号管理
+          // 不能訪問帳號管理
     if (pathname.startsWith('/account_management')) {
       return false;
     }
-    return true; // 其他页面暂时允许访问
+          return true; // 其他頁面暫時允許訪問
   }
   
-  // 普通用户和会员暂时按原来的逻辑
+      // 普通用戶和會員暫時按原來的邏輯
   if (userRole === 'user' || userRole === 'member') {
-    return true; // 暂时允许访问所有页面
+          return true; // 暫時允許訪問所有頁面
   }
   
   return false;
@@ -87,7 +89,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // 检查认证状态
+      // 檢查認證狀態
   const checkAuth = async () => {
     try {
       const response = await fetch('/api/auth/me');
@@ -100,29 +102,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
       setUser(null);
     } catch (error) {
-      console.error('认证检查失败:', error);
+      console.error('認證檢查失敗:', error);
       setUser(null);
     }
   };
 
-  // 登录
+      // 登入
   const login = (userData: User) => {
     setUser(userData);
   };
 
-  // 注销
+      // 登出
   const logout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
     } catch (error) {
-      console.error('注销失败:', error);
+              console.error('登出失敗:', error);
     } finally {
       setUser(null);
       router.push('/login');
     }
   };
 
-  // 初始化认证检查
+      // 初始化認證檢查
   useEffect(() => {
     const initAuth = async () => {
       await checkAuth();
@@ -134,20 +136,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // 路由保护逻辑
   useEffect(() => {
-    if (isLoading) return; // 等待认证检查完成
+          if (isLoading) return; // 等待認證檢查完成
 
     const isProtected = isProtectedRoute(pathname);
     const isPublic = isPublicRoute(pathname);
 
     if (isProtected && !user) {
-      // 需要认证但用户未登录，重定向到登录页
+      // 需要認證但用戶未登入，重定向到登入頁
       router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
     } else if (pathname === '/login' && user) {
-      // 已登录用户访问登录页，重定向到主页
+              // 已登入用戶訪問登入頁，重定向到主頁
       router.push('/');
     } else if (user && isProtected && !hasRouteAccess(pathname, user.role)) {
-      // 用户已登录但没有权限访问该页面，重定向到无权限页面
-      console.warn(`用户 ${user.username} (${user.role}) 尝试访问无权限页面: ${pathname}`);
+              // 用戶已登入但沒有權限訪問該頁面，重定向到無權限頁面
+              console.warn(`用戶 ${user.username} (${user.role}) 嘗試訪問無權限頁面: ${pathname}`);
       router.push('/unauthorized');
     }
   }, [user, pathname, isLoading, router]);

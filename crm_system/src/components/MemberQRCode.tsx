@@ -1,53 +1,39 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import QRCode from 'react-qr-code';
-import { IActivity } from '@/models/Activity';
 
-interface ActivityQRCodeProps {
-  activity: IActivity;
-  onScan?: (memberId: string) => void;
+interface Member {
+  _id: string;
+  username: string;
+  name: string;
+  memberCode?: string;
 }
 
-interface QRCodeData {
-  activityId: string;
-  activityName: string;
-  date: string;
-  location: string;                    // 添加地點字段
-  type: 'attendance' | 'info';
+interface MemberQRCodeProps {
+  member: Member;
+}
+
+interface MemberQRData {
+  memberId: string;
+  memberName: string;
+  memberCode: string;
+  type: 'member';
   timestamp: number;
 }
 
-const ActivityQRCode: React.FC<ActivityQRCodeProps> = ({ activity, onScan }) => {
-  const [qrCodeData, setQrCodeData] = useState<string>('');
-
-  useEffect(() => {
-    // 生成 QR Code 數據
-    const data: QRCodeData = {
-      activityId: activity._id?.toString() || '',
-      activityName: activity.activityName,
-      date: activity.startTime ? new Date(activity.startTime).toLocaleDateString('zh-TW') : '',
-      location: activity.location,                              // 添加地點信息
-      type: 'attendance',
+const MemberQRCode: React.FC<MemberQRCodeProps> = ({ member }) => {
+  // 生成會員QR Code數據
+  const generateMemberQR = () => {
+    const memberData: MemberQRData = {
+      memberId: member._id,
+      memberName: member.name || member.username,
+      memberCode: member.memberCode || member.username,
+      type: 'member',
       timestamp: Date.now()
     };
     
-    setQrCodeData(JSON.stringify(data));
-  }, [activity]);
-
-  // 生成打卡用的 QR Code 數據
-  const generateAttendanceQR = () => {
-    const attendanceData = {
-      type: 'attendance',
-      activityId: activity._id?.toString() || '',
-      activityName: activity.activityName,
-      date: activity.startTime ? new Date(activity.startTime).toLocaleDateString('zh-TW') : '',
-      trainerName: activity.trainerName,
-      location: activity.location,
-      timestamp: Date.now()
-    };
-    
-    return JSON.stringify(attendanceData);
+    return JSON.stringify(memberData);
   };
 
   const handleDownloadQR = () => {
@@ -69,8 +55,7 @@ const ActivityQRCode: React.FC<ActivityQRCodeProps> = ({ activity, onScan }) => 
           ctx.drawImage(img, 0, 0, 256, 256);
           
           const link = document.createElement('a');
-          const dateStr = activity.startTime ? new Date(activity.startTime).toLocaleDateString('zh-TW').replace(/\//g, '-') : 'unknown';
-          link.download = `activity-${activity.activityName}-${dateStr}.png`;
+          link.download = `member-${member.name || member.username}-${member.memberCode || member.username}.png`;
           link.href = canvas.toDataURL();
           link.click();
         }
@@ -86,28 +71,28 @@ const ActivityQRCode: React.FC<ActivityQRCodeProps> = ({ activity, onScan }) => 
       printWindow.document.write(`
         <html>
           <head>
-            <title>活動 QR Code - ${activity.activityName}</title>
+            <title>會員 QR Code - ${member.name || member.username}</title>
             <style>
               body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
               .qr-container { margin: 20px 0; }
-              .activity-info { margin: 20px 0; }
+              .member-info { margin: 20px 0; }
               .print-button { display: none; }
               @media print { .print-button { display: none; } }
             </style>
           </head>
           <body>
-            <h1>${activity.activityName}</h1>
-            <div class="activity-info">
-              <p><strong>日期：</strong>${activity.startTime ? new Date(activity.startTime).toLocaleDateString('zh-TW') : '未指定'}</p>
-              <p><strong>教練：</strong>${activity.trainerName || '未指定'}</p>
-              <p><strong>地點：</strong>${activity.location || '未指定'}</p>
+            <h1>會員 QR Code</h1>
+            <div class="member-info">
+              <p><strong>姓名：</strong>${member.name || member.username}</p>
+              <p><strong>編號：</strong>${member.memberCode || member.username}</p>
+              <p><strong>生成時間：</strong>${new Date().toLocaleString('zh-TW')}</p>
             </div>
             <div class="qr-container">
               <div style="width: 256px; height: 256px; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
                 <p style="color: #666;">QR Code 將在此處顯示</p>
               </div>
             </div>
-            <p>掃描此 QR Code 記錄出席</p>
+            <p>掃描此 QR Code 記錄會員出席</p>
             <button class="print-button" onclick="window.print()">列印</button>
           </body>
         </html>
@@ -120,14 +105,14 @@ const ActivityQRCode: React.FC<ActivityQRCodeProps> = ({ activity, onScan }) => 
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-gray-800 text-center">
-          {activity.activityName} - QR Code
+          {member.name || member.username} - 會員QR Code
         </h3>
       </div>
 
       <div className="text-center">
         <div className="bg-gray-50 p-4 rounded-lg inline-block">
           <QRCode
-            value={generateAttendanceQR()}
+            value={generateMemberQR()}
             size={200}
             level="M"
             bgColor="#FFFFFF"
@@ -137,10 +122,10 @@ const ActivityQRCode: React.FC<ActivityQRCodeProps> = ({ activity, onScan }) => 
         
         <div className="mt-4 space-y-2">
           <p className="text-xs text-gray-500">
-            活動：{activity.activityName}
+            姓名：{member.name || member.username}
           </p>
           <p className="text-xs text-gray-500">
-            日期：{activity.startTime ? new Date(activity.startTime).toLocaleDateString('zh-TW') : '未設定'}
+            編號：{member.memberCode || member.username}
           </p>
         </div>
 
@@ -163,4 +148,4 @@ const ActivityQRCode: React.FC<ActivityQRCodeProps> = ({ activity, onScan }) => 
   );
 };
 
-export default ActivityQRCode; 
+export default MemberQRCode; 

@@ -100,7 +100,7 @@ export default function Home() {
           </Link>
 
           <Link 
-            href="/account_management"
+            href="/account_management/admin"
             className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-200 hover:scale-105 hover:bg-indigo-50 group cursor-pointer"
           >
             <div className="text-center">
